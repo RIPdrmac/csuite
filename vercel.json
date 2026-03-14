@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/content-run",
+      "schedule": "25 13 * * *"
+    },
+    {
+      "path": "/api/cron/content-execute",
+      "schedule": "30 13 * * *"
+    },
+    {
+      "path": "/api/cron/daily-recap",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}
