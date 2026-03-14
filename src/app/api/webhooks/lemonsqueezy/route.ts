@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { Client } from '@notionhq/client';
+import { notifySale } from '@/lib/slack';
 
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
@@ -95,6 +96,9 @@ export async function POST(request: NextRequest) {
         });
         console.log(`[Notion] Sale logged: ${product} ${tier} $${total} — ${customerEmail}`);
       }
+
+      // Notify Slack
+      await notifySale(product, tier, total, customerEmail || customerName);
 
       // TODO: Auto-invite to GitHub repo
       // TODO: Send welcome email via Resend
