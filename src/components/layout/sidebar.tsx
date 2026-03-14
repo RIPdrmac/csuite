@@ -14,6 +14,7 @@ import {
   Brain,
   DollarSign,
   Globe,
+  Snowflake,
   Menu,
   X,
 } from 'lucide-react';
@@ -21,9 +22,9 @@ import {
 const navigation = [
   { name: 'Command Center', href: '/', icon: LayoutDashboard },
   { name: 'Digital Products', href: '/products', icon: Globe },
+  { name: 'Snowcone', href: '/snowcone', icon: Snowflake },
   { name: 'Finance', href: '/finance', icon: DollarSign },
   { name: 'Decisions', href: '/decisions', icon: GitBranch },
-  { name: 'Content & GTM', href: '/content', icon: Megaphone },
   { name: 'Master TODO', href: '/todos', icon: CheckSquare },
   { name: 'Agent Intel', href: '/agents', icon: Brain },
   { name: 'Learning Log', href: '/learning', icon: BookOpen },
