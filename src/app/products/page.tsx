@@ -137,7 +137,7 @@ export default function ProductsPage() {
                             {tier}
                           </div>
                           <div className="text-lg font-mono font-semibold text-foreground mb-2">
-                            {formatCurrency(product.tiers[tier].price)}<span className="text-[11px] text-muted font-normal">/mo</span>
+                            {formatCurrency(product.tiers[tier].price)}<span className="text-[11px] text-muted font-normal"></span>
                           </div>
                           <ul className="space-y-1">
                             {product.tiers[tier].features.map((f, i) => (
