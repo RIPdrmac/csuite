@@ -86,6 +86,7 @@ Return as JSON: { "hook": "...", "body": "...", "cta": "...", "hashtags": ["..."
 ${format === 'pricing_card' ? `Generate pricing card copy:
 - Headline: Product name + tier
 - Subheadline: One-line value prop specific to this tier
+- Description: MUST be between 120-160 characters. No shorter. No longer. Count carefully.
 - Price: ${persona.pricePoint}
 - Feature list context: Why each feature matters (not just the feature name)
 - CTA button text

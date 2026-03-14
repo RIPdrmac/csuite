@@ -2,6 +2,7 @@
 // 4 personas: MAIN (all tiers), VARIANT 1 (Starter), VARIANT 2 (Pro), VARIANT 3 (Agency)
 // Positioning: Not a website — it's a webOS. Claude-connected intelligence.
 // Angle: You control your data. No StyleSeat taking 25%. No Acuity limitations.
+// RULE: Product descriptions must be 120-160 characters. No exceptions.
 
 export interface SnowconePersona {
   id: string;
