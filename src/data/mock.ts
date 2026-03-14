@@ -1,0 +1,566 @@
+import {
+  Offer,
+  Decision,
+  AgentRecommendation,
+  LearningEvent,
+  KPIStats,
+  AdaptiveInsight,
+  Blocker,
+  ActivityEvent,
+  ContentItem,
+  TodoItem,
+  AgentLog,
+} from '@/types';
+
+// ─── KPI Stats ─────────────────────────────────────────────────────
+
+export const kpiStats: KPIStats = {
+  currentMRR: 0,
+  targetMRR: 10_000,
+  gap: 10_000,
+  daysLeft: 31,
+  requiredDailyPace: 323,
+  currentDailyPace: 0,
+  totalOffers: 20,
+  liveOffers: 3,
+  openDecisions: 0,
+  conversionAvg: 0,
+  websitesCreated: 20,
+  websitesSold: 0,
+  totalRevenue: 0,
+  affiliateRevenue: 0,
+  templateRevenue: 0,
+  avgOrderValue: 0,
+  adSpend: 0,
+  roas: 0,
+  customersTotal: 0,
+  affiliateAttachAvg: 0,
+};
+
+// ─── Master TODO ───────────────────────────────────────────────────
+
+export const todos: TodoItem[] = [
+  // ── PRE-LAUNCH: Tonight 3/14 ──
+  { id: 't1', title: 'Create LemonSqueezy account + storefront', description: 'Sign up, configure store, set webhook URL', priority: 'critical', status: 'todo', agent: 'FINANCE', dueDate: '2026-03-14', createdAt: '2026-03-14' },
+  { id: 't2', title: 'List BarberBook on LemonSqueezy (3 tiers)', description: 'Starter $197, Pro $397, Agency $997 — upload assets, write descriptions', priority: 'critical', status: 'todo', agent: 'PRODUCT', dueDate: '2026-03-14', createdAt: '2026-03-14' },
+  { id: 't3', title: 'List ChurchOS on LemonSqueezy (3 tiers)', description: 'Same tier structure — customize for church audience', priority: 'critical', status: 'todo', agent: 'PRODUCT', dueDate: '2026-03-14', createdAt: '2026-03-14' },
+  { id: 't4', title: 'List DJBook on LemonSqueezy (3 tiers)', description: 'Same tier structure — customize for DJ/entertainment', priority: 'critical', status: 'todo', agent: 'PRODUCT', dueDate: '2026-03-14', createdAt: '2026-03-14' },
+  { id: 't5', title: 'Create landing page for BarberBook', description: 'Hero, demo screenshot, pricing table, testimonials placeholder, CTA', priority: 'critical', status: 'todo', agent: 'BRAND', dueDate: '2026-03-14', createdAt: '2026-03-14' },
+  { id: 't6', title: 'Create landing page for ChurchOS', description: 'Same structure, church-specific copy and imagery', priority: 'high', status: 'todo', agent: 'BRAND', dueDate: '2026-03-15', createdAt: '2026-03-14' },
+  { id: 't7', title: 'Create landing page for DJBook', description: 'Same structure, DJ/entertainment-specific visual style', priority: 'high', status: 'todo', agent: 'BRAND', dueDate: '2026-03-15', createdAt: '2026-03-14' },
+  { id: 't8', title: 'Write 9 ad hooks (3 per product)', description: 'Pain-point, comparison, social proof variants', priority: 'high', status: 'todo', agent: 'GROWTH', dueDate: '2026-03-15', createdAt: '2026-03-14' },
+  { id: 't9', title: 'Configure Meta Business Manager + Pixel', description: 'Set up ad account, create pixel, install on all LPs', priority: 'high', status: 'todo', agent: 'GROWTH', dueDate: '2026-03-15', createdAt: '2026-03-14' },
+  { id: 't10', title: 'Set up Google Analytics 4 on landing pages', description: 'Track page views, conversion events, UTM parameters', priority: 'medium', status: 'todo', agent: 'GROWTH', dueDate: '2026-03-15', createdAt: '2026-03-14' },
+
+  // ── WEEK 1: March 15-21 — LAUNCH & VALIDATE ──
+  { id: 't11', title: 'Launch day: Go live on all 3 products', description: 'Verify checkouts, test purchases, confirm webhooks', priority: 'critical', status: 'todo', agent: 'PROTOCOL', dueDate: '2026-03-15', createdAt: '2026-03-14' },
+  { id: 't12', title: 'First social posts: IG Reel + LinkedIn + TikTok', description: 'BarberBook demo Reel, ChurchOS LinkedIn post, DJBook TikTok', priority: 'high', status: 'todo', agent: 'BRAND', dueDate: '2026-03-15', createdAt: '2026-03-14' },
+  { id: 't13', title: 'Start Meta ads: $30/day across BarberBook + DJBook', description: 'Test 3 creatives each, $10/creative for 3 days', priority: 'high', status: 'todo', agent: 'GROWTH', dueDate: '2026-03-15', createdAt: '2026-03-14' },
+  { id: 't14', title: 'Send 25 cold DMs to barbershop owners', description: 'Instagram DMs with BarberBook demo link', priority: 'high', status: 'todo', agent: 'GROWTH', dueDate: '2026-03-16', createdAt: '2026-03-14' },
+  { id: 't15', title: 'Set up ConvertKit email capture + welcome sequence', description: '3-email welcome series for all landing pages', priority: 'high', status: 'todo', agent: 'GROWTH', dueDate: '2026-03-16', createdAt: '2026-03-14' },
+  { id: 't16', title: 'Set up Skool community', description: 'Community for buyers, upsell funnel, template support hub', priority: 'medium', status: 'todo', agent: 'BRAND', dueDate: '2026-03-17', createdAt: '2026-03-14' },
+  { id: 't17', title: 'List FreelanceOS on Gumroad Discover', description: 'Free marketplace distribution, full-price listing', priority: 'medium', status: 'todo', agent: 'GROWTH', dueDate: '2026-03-17', createdAt: '2026-03-14' },
+  { id: 't18', title: 'Configure affiliate links in all 3 live templates', description: 'Calendly, Square, Mailchimp, Tithe.ly, Honeybook', priority: 'high', status: 'todo', agent: 'FINANCE', dueDate: '2026-03-17', createdAt: '2026-03-14' },
+  { id: 't19', title: '48-hour data review: kill or scale', description: 'Evaluate CPA, conversion rates, kill underperformers', priority: 'critical', status: 'todo', agent: 'GROWTH', dueDate: '2026-03-18', createdAt: '2026-03-14' },
+  { id: 't20', title: 'Week 1 retrospective: log decisions + lessons', description: 'Learning Log entries, agent accuracy check', priority: 'high', status: 'todo', agent: 'PROTOCOL', dueDate: '2026-03-21', createdAt: '2026-03-14' },
+
+  // ── WEEK 2: March 22-28 — SCALE WINNERS ──
+  { id: 't21', title: 'List FreelanceOS + LawDraft on LemonSqueezy', description: 'Staging → Available for Tier 2 products', priority: 'high', status: 'todo', agent: 'PRODUCT', dueDate: '2026-03-22', createdAt: '2026-03-14' },
+  { id: 't22', title: 'Scale winning ad to $50/day', description: 'Pour budget into best ROAS creative', priority: 'high', status: 'todo', agent: 'GROWTH', dueDate: '2026-03-22', createdAt: '2026-03-14' },
+  { id: 't23', title: 'Cold DM campaign: 50 businesses/day', description: 'Expand outreach to winning niches', priority: 'high', status: 'todo', agent: 'GROWTH', dueDate: '2026-03-24', createdAt: '2026-03-14' },
+  { id: 't24', title: 'Publish 3 SEO comparison articles', description: '"Best [niche] website builder" keyword targeting', priority: 'medium', status: 'todo', agent: 'BRAND', dueDate: '2026-03-25', createdAt: '2026-03-14' },
+  { id: 't25', title: 'Collect testimonials from Week 1 buyers', description: 'Social proof for landing pages and ads', priority: 'medium', status: 'todo', agent: 'BRAND', dueDate: '2026-03-27', createdAt: '2026-03-14' },
+
+  // ── WEEK 3: March 29 - April 4 — COMPOUND ──
+  { id: 't26', title: 'Launch Agency tier promotional pricing', description: '50% off Agency for 1 week — $499-$749 instead of $997-$1497', priority: 'high', status: 'todo', agent: 'FINANCE', dueDate: '2026-03-29', createdAt: '2026-03-14' },
+  { id: 't27', title: 'Introduce service upsell ($99-$299 setup help)', description: 'Add setup assistance package to all templates', priority: 'medium', status: 'todo', agent: 'PRODUCT', dueDate: '2026-03-31', createdAt: '2026-03-14' },
+  { id: 't28', title: 'Launch referral program (20% commission)', description: 'Buyers refer buyers — LemonSqueezy affiliate system', priority: 'medium', status: 'todo', agent: 'GROWTH', dueDate: '2026-04-01', createdAt: '2026-03-14' },
+
+  // ── WEEK 4: April 5-15 — PUSH TO $10K ──
+  { id: 't29', title: 'All-in on highest ROAS channel', description: 'Concentrate remaining budget on proven winner', priority: 'critical', status: 'todo', agent: 'GROWTH', dueDate: '2026-04-05', createdAt: '2026-03-14' },
+  { id: 't30', title: 'Flash sale if needed: bundle deals', description: '2 templates for price of 1.5, limited 48-hour window', priority: 'medium', status: 'todo', agent: 'FINANCE', dueDate: '2026-04-10', createdAt: '2026-03-14' },
+  { id: 't31', title: 'Final push content blitz', description: 'Daily posting across all platforms, testimonial-heavy', priority: 'high', status: 'todo', agent: 'BRAND', dueDate: '2026-04-12', createdAt: '2026-03-14' },
+  { id: 't32', title: 'Final retrospective + book chapter draft', description: 'Document full 30-day journey, outcomes, lessons', priority: 'high', status: 'todo', agent: 'PROTOCOL', dueDate: '2026-04-15', createdAt: '2026-03-14' },
+
+  // ── DAILY RECURRING ──
+  { id: 't33', title: '7:30 AM — Morning brief with CSUITE', description: 'Open ASK C, ask for morning brief. Review priorities.', priority: 'high', status: 'todo', agent: 'PROTOCOL', dueDate: '2026-03-15', createdAt: '2026-03-14' },
+  { id: 't34', title: 'Daily: Post 1 IG Reel + 1 carousel', description: 'Product demos, before/after, customer use cases', priority: 'high', status: 'todo', agent: 'BRAND', dueDate: '2026-03-15', createdAt: '2026-03-14' },
+  { id: 't35', title: 'Daily: 2-3 tweets on X (build in public)', description: 'Share progress, numbers, lessons — the 10Kin30 narrative', priority: 'medium', status: 'todo', agent: 'BRAND', dueDate: '2026-03-15', createdAt: '2026-03-14' },
+];
+
+// ─── Agent Logs ────────────────────────────────────────────────────
+
+export const agentLogs: AgentLog[] = [
+  {
+    id: 'alog-1',
+    agent: 'PRODUCT',
+    timestamp: '2026-03-13T14:00:00Z',
+    action: 'Niche analysis',
+    recommendation: 'Prioritize Pet Services over Law Firms for Tier 2 launch',
+    confidence: 'Solid',
+    accepted: null,
+  },
+  {
+    id: 'alog-2',
+    agent: 'GROWTH',
+    timestamp: '2026-03-13T13:30:00Z',
+    action: 'Ad spend optimization',
+    recommendation: 'Double Restaurant ad spend — best ROAS at 4.2x',
+    confidence: 'High',
+    accepted: null,
+  },
+  {
+    id: 'alog-3',
+    agent: 'FINANCE',
+    timestamp: '2026-03-13T12:00:00Z',
+    action: 'Pricing analysis',
+    recommendation: 'Test $349 on Restaurant before scaling',
+    confidence: 'Solid',
+    accepted: null,
+  },
+  {
+    id: 'alog-4',
+    agent: 'GROWTH',
+    timestamp: '2026-03-12T16:00:00Z',
+    action: 'Fitness Studios evaluation',
+    recommendation: 'Pause Fitness Studios ad spend — CPA exceeds threshold',
+    confidence: 'High',
+    accepted: false,
+    outcome: 'Override cost 3 days of wasted spend. Agent was correct.',
+  },
+  {
+    id: 'alog-5',
+    agent: 'PROTOCOL',
+    timestamp: '2026-03-12T10:00:00Z',
+    action: 'Process hygiene',
+    recommendation: 'Log Fitness Studios decision within 48h',
+    confidence: 'High',
+    accepted: true,
+  },
+];
+
+// ─── Offers ────────────────────────────────────────────────────────
+
+export const offers: Offer[] = [
+  {
+    id: 'off-1',
+    name: 'Starter Pack — Local Restaurants',
+    niche: 'Restaurants',
+    status: 'Live',
+    price: 299,
+    traffic: 1_240,
+    conversionRate: 0.042,
+    affiliateAttachRate: 0.68,
+    revenue: 890,
+    nextMove: 'Test $349 pricing tier',
+    createdAt: '2026-02-25',
+  },
+  {
+    id: 'off-2',
+    name: 'Pro Template — Fitness Studios',
+    niche: 'Fitness',
+    status: 'Testing',
+    price: 499,
+    traffic: 820,
+    conversionRate: 0.028,
+    affiliateAttachRate: 0.45,
+    revenue: 499,
+    nextMove: 'Improve landing page copy',
+    createdAt: '2026-02-28',
+  },
+  {
+    id: 'off-3',
+    name: 'Essential — Real Estate Agents',
+    niche: 'Real Estate',
+    status: 'Live',
+    price: 399,
+    traffic: 640,
+    conversionRate: 0.051,
+    affiliateAttachRate: 0.72,
+    revenue: 798,
+    nextMove: 'Add scheduling affiliate',
+    createdAt: '2026-03-01',
+  },
+  {
+    id: 'off-4',
+    name: 'Starter — Pet Services',
+    niche: 'Pet Services',
+    status: 'Building',
+    price: 249,
+    traffic: 0,
+    conversionRate: 0,
+    affiliateAttachRate: 0,
+    revenue: 0,
+    nextMove: 'Finish template build',
+    createdAt: '2026-03-08',
+  },
+  {
+    id: 'off-5',
+    name: 'Premium — Law Firms',
+    niche: 'Legal',
+    status: 'Idea',
+    price: 699,
+    traffic: 0,
+    conversionRate: 0,
+    affiliateAttachRate: 0,
+    revenue: 0,
+    nextMove: 'Validate niche demand',
+    createdAt: '2026-03-10',
+  },
+  {
+    id: 'off-6',
+    name: 'Launch Pack — Salons & Spas',
+    niche: 'Beauty',
+    status: 'Live',
+    price: 349,
+    traffic: 380,
+    conversionRate: 0.032,
+    affiliateAttachRate: 0.55,
+    revenue: 153,
+    nextMove: 'Scale ad spend by 2x',
+    createdAt: '2026-03-03',
+  },
+];
+
+// ─── Decisions ─────────────────────────────────────────────────────
+
+export const decisions: Decision[] = [
+  {
+    id: 'dec-1',
+    title: 'Raise Restaurant template to $349',
+    offerId: 'off-1',
+    offerName: 'Starter Pack — Local Restaurants',
+    decisionType: 'Pricing',
+    mode: 'HOLD',
+    consequenceClass: 'High',
+    status: 'Awaiting approval',
+    leadRecommendation: 'Test at $349 with existing traffic for 5 days before committing.',
+    dissentSummary: 'FINANCE warns margin gain is marginal if conversion drops >8%.',
+    confidence: 'Solid',
+    vetoed: false,
+    createdAt: '2026-03-11',
+  },
+  {
+    id: 'dec-2',
+    title: 'Add scheduling affiliate to Real Estate',
+    offerId: 'off-3',
+    offerName: 'Essential — Real Estate Agents',
+    decisionType: 'Upsell',
+    mode: 'AUTO',
+    consequenceClass: 'Medium',
+    status: 'Approved',
+    leadRecommendation: 'Attach Calendly affiliate — 15% commission, low integration effort.',
+    dissentSummary: 'None.',
+    confidence: 'High',
+    vetoed: false,
+    createdAt: '2026-03-10',
+  },
+  {
+    id: 'dec-3',
+    title: 'Cut or pivot Fitness Studios offer',
+    offerId: 'off-2',
+    offerName: 'Pro Template — Fitness Studios',
+    decisionType: 'Cut',
+    mode: 'HOLD',
+    consequenceClass: 'Critical',
+    status: 'Deliberating',
+    leadRecommendation: 'Pivot to lower price point ($299) or cut. Traffic quality is low.',
+    dissentSummary: 'BRAND argues fitness niche has long-term brand value worth holding.',
+    confidence: 'Moderate',
+    vetoed: false,
+    createdAt: '2026-03-12',
+  },
+  {
+    id: 'dec-4',
+    title: 'Launch Pet Services before Law Firms',
+    offerId: 'off-4',
+    offerName: 'Starter — Pet Services',
+    decisionType: 'Launch',
+    mode: 'AUTO',
+    consequenceClass: 'Medium',
+    status: 'Awaiting approval',
+    leadRecommendation: 'Pet services has higher search volume and lower template competition.',
+    dissentSummary: 'FINANCE notes law firms have 2.8x higher ARPU potential.',
+    confidence: 'Solid',
+    vetoed: false,
+    createdAt: '2026-03-12',
+  },
+];
+
+// ─── Agent Recommendations ─────────────────────────────────────────
+
+export const agentRecommendations: AgentRecommendation[] = [
+  {
+    agent: 'PRODUCT',
+    recommendation: 'Ship Pet Services template today — 80% complete, high demand signal.',
+    confidence: 'High',
+    rationale: 'Template is near-complete and search volume for pet service websites is 3x fitness.',
+    risk: 'Launching before full QA may require hotfixes.',
+    status: 'pending',
+  },
+  {
+    agent: 'GROWTH',
+    recommendation: 'Double ad spend on Restaurant template — best ROAS across all offers.',
+    confidence: 'Solid',
+    rationale: 'Restaurant has 4.2% conversion at $12 CPA. Scaling should hold efficiency to 2x.',
+    risk: 'Audience saturation possible within 10 days at higher spend.',
+    status: 'pending',
+  },
+  {
+    agent: 'FINANCE',
+    recommendation: 'Test $349 price on restaurants before scaling ad spend.',
+    confidence: 'Solid',
+    rationale: 'Higher price at same conversion = better unit economics before scaling.',
+    risk: 'Testing delays scaling window by 3-5 days.',
+    status: 'pending',
+  },
+  {
+    agent: 'PROTOCOL',
+    recommendation: 'Log outcome of Fitness Studios decision within 48 hours.',
+    confidence: 'High',
+    rationale: 'Open decisions older than 72 hours correlate with slower execution velocity.',
+    risk: 'None — process hygiene.',
+    status: 'pending',
+  },
+  {
+    agent: 'BRAND',
+    recommendation: 'Standardize template preview screenshots across all offer pages.',
+    confidence: 'Moderate',
+    rationale: 'Inconsistent preview quality may reduce perceived value on higher-priced templates.',
+    risk: 'Design time cost: ~2 hours.',
+    status: 'pending',
+  },
+  {
+    agent: 'TALENT',
+    recommendation: 'No external hires needed yet. Automate QA checklist instead.',
+    confidence: 'High',
+    rationale: 'Current build velocity is sufficient. QA automation saves 45 min per launch.',
+    risk: 'Automation setup takes ~3 hours upfront.',
+    status: 'pending',
+  },
+];
+
+// ─── Blockers ──────────────────────────────────────────────────────
+
+export const blockers: Blocker[] = [
+  {
+    id: 'blk-1',
+    title: 'Fitness Studios conversion below threshold',
+    severity: 'high',
+    offerId: 'off-2',
+    description: 'Conversion at 2.8% is below 3.5% break-even at current CPA.',
+    suggestedAction: 'Cut offer or pivot price within 48 hours.',
+  },
+  {
+    id: 'blk-2',
+    title: 'Daily pace falling short of target',
+    severity: 'critical',
+    description: 'Current $195/day pace requires $426/day to hit $10K. Gap widening.',
+    suggestedAction: 'Prioritize highest-ROAS offer scaling immediately.',
+  },
+];
+
+// ─── Activity Feed ─────────────────────────────────────────────────
+
+export const activityEvents: ActivityEvent[] = [
+  {
+    id: 'act-1',
+    timestamp: '2026-03-13T14:30:00Z',
+    type: 'offer',
+    title: 'Salons & Spas went live',
+    description: 'Launch Pack — Salons & Spas is now accepting traffic.',
+  },
+  {
+    id: 'act-2',
+    timestamp: '2026-03-13T11:15:00Z',
+    type: 'decision',
+    title: 'Approved: Add scheduling affiliate',
+    description: 'Real Estate offer will integrate Calendly affiliate link.',
+  },
+  {
+    id: 'act-3',
+    timestamp: '2026-03-12T22:00:00Z',
+    type: 'learning',
+    title: 'Restaurant conversion holding at $299',
+    description: 'No conversion drop after 7-day window. Price increase test greenlit.',
+  },
+  {
+    id: 'act-4',
+    timestamp: '2026-03-12T16:45:00Z',
+    type: 'system',
+    title: 'CSUITE flagged pace gap',
+    description: 'Daily pace dropped below 50% of target. Revenue bias escalated.',
+  },
+  {
+    id: 'act-5',
+    timestamp: '2026-03-12T09:00:00Z',
+    type: 'offer',
+    title: 'Pet Services template 80% complete',
+    description: 'PRODUCT recommends shipping today with known gaps.',
+  },
+];
+
+// ─── Adaptive Insights ────────────────────────────────────────────
+
+export const adaptiveInsights: AdaptiveInsight[] = [
+  {
+    id: 'ai-1',
+    message: 'Elite operators would stop debating Fitness Studios and cut it today. The conversion data is conclusive. Reallocate that attention to scaling Restaurant.',
+    bias: 'speed',
+    priority: 'high',
+  },
+  {
+    id: 'ai-2',
+    message: 'You have 3 live offers but only 1 is performing. Focus beats breadth at this stage. Concentrate spend on the winner.',
+    bias: 'focus',
+    priority: 'high',
+  },
+  {
+    id: 'ai-3',
+    message: 'Revenue repeatability signal: Restaurant template has the most predictable conversion curve. Build your playbook from this template first.',
+    bias: 'repeatability',
+    priority: 'medium',
+  },
+];
+
+// ─── Learning Events ───────────────────────────────────────────────
+
+export const learningEvents: LearningEvent[] = [
+  {
+    id: 'le-1',
+    date: '2026-03-12',
+    eventType: 'Launch',
+    title: 'Salons & Spas template launched',
+    result: '12 visits, 0 conversions in first 24h',
+    recommendation: 'GROWTH recommended waiting 72h before evaluating.',
+    overridden: false,
+    lesson: 'Early traffic quality matters more than volume. Next launch, validate traffic source first.',
+  },
+  {
+    id: 'le-2',
+    date: '2026-03-10',
+    eventType: 'Sale',
+    title: 'First Real Estate sale at $399',
+    result: 'Converted from organic search. Calendly affiliate clicked.',
+    recommendation: 'PRODUCT recommended $399 entry price.',
+    overridden: false,
+    lesson: 'Higher-priced niches convert better from organic. SEO investment justified.',
+  },
+  {
+    id: 'le-3',
+    date: '2026-03-07',
+    eventType: 'Failure',
+    title: 'Fitness Studios ad campaign underperformed',
+    result: 'CPA of $38 against $14 target. 0.8% landing page conversion.',
+    recommendation: 'GROWTH recommended pausing spend after 48h.',
+    overridden: true,
+    lesson: 'Override cost 3 additional days of wasted spend. Trust GROWTH on CPA signals.',
+  },
+  {
+    id: 'le-4',
+    date: '2026-03-05',
+    eventType: 'Launch',
+    title: 'Restaurant template launched at $299',
+    result: '4.2% conversion rate in first week. Strong performer.',
+    recommendation: 'FINANCE recommended $299 starting price.',
+    overridden: false,
+    lesson: 'Sub-$300 entry pricing reduces friction for SMB buyers. Test increments, not jumps.',
+  },
+  {
+    id: 'le-5',
+    date: '2026-03-01',
+    eventType: 'Override',
+    title: 'Mac overrode PRODUCT on niche order',
+    result: 'Launched Restaurants before Real Estate (PRODUCT recommended Real Estate first).',
+    recommendation: 'PRODUCT recommended Real Estate for higher ARPU.',
+    overridden: true,
+    lesson: 'Restaurant launched faster and converted sooner. Speed-to-market can beat ARPU optimization.',
+  },
+];
+
+// ─── Content Items ─────────────────────────────────────────────────
+
+export const contentItems: ContentItem[] = [
+  {
+    id: 'cnt-1',
+    type: 'Landing Page',
+    title: 'Restaurant Template — Main LP',
+    status: 'Active',
+    offerId: 'off-1',
+    offerName: 'Starter Pack — Local Restaurants',
+    content: 'Your restaurant deserves a website that works as hard as you do.',
+    metrics: { impressions: 1_240, clicks: 186, conversions: 52 },
+    createdAt: '2026-02-25',
+  },
+  {
+    id: 'cnt-2',
+    type: 'Hook',
+    title: 'Pain-point hook — No-code for restaurants',
+    status: 'Testing',
+    offerId: 'off-1',
+    offerName: 'Starter Pack — Local Restaurants',
+    content: 'Still paying a developer $2K for a restaurant website? There\'s a $299 alternative.',
+    metrics: { impressions: 3_400, clicks: 289 },
+    createdAt: '2026-03-05',
+  },
+  {
+    id: 'cnt-3',
+    type: 'CTA',
+    title: 'CTA A/B — "Get Started" vs "Build My Site"',
+    status: 'Testing',
+    offerId: 'off-1',
+    offerName: 'Starter Pack — Local Restaurants',
+    content: 'Testing two CTA variants on restaurant LP.',
+    metrics: { impressions: 620, clicks: 41, conversions: 12 },
+    createdAt: '2026-03-08',
+  },
+  {
+    id: 'cnt-4',
+    type: 'Affiliate',
+    title: 'Calendly integration page — Real Estate',
+    status: 'Draft',
+    offerId: 'off-3',
+    offerName: 'Essential — Real Estate Agents',
+    content: 'Showcase Calendly scheduling integration as part of Real Estate template.',
+    createdAt: '2026-03-11',
+  },
+  {
+    id: 'cnt-5',
+    type: 'Landing Page',
+    title: 'Fitness Studios — Main LP',
+    status: 'Active',
+    offerId: 'off-2',
+    offerName: 'Pro Template — Fitness Studios',
+    content: 'Launch your fitness brand online in under 10 minutes.',
+    metrics: { impressions: 820, clicks: 98, conversions: 23 },
+    createdAt: '2026-02-28',
+  },
+  {
+    id: 'cnt-6',
+    type: 'Email',
+    title: 'Welcome sequence — All niches',
+    status: 'Draft',
+    content: 'Post-purchase email sequence for template buyers.',
+    createdAt: '2026-03-09',
+  },
+  {
+    id: 'cnt-7',
+    type: 'Outbound',
+    title: 'Cold DM script — Pet groomers',
+    status: 'Draft',
+    offerId: 'off-4',
+    offerName: 'Starter — Pet Services',
+    content: 'Direct outreach script for pet groomers on Instagram.',
+    createdAt: '2026-03-12',
+  },
+  {
+    id: 'cnt-8',
+    type: 'Ad',
+    title: 'Meta ad creative — Salons v1',
+    status: 'Review',
+    offerId: 'off-6',
+    offerName: 'Launch Pack — Salons & Spas',
+    content: 'Before/after salon website comparison ad.',
+    createdAt: '2026-03-12',
+  },
+];

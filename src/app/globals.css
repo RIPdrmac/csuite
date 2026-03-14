@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0b0d0f;
+  --foreground: #e4e4e7;
+  --card: #111316;
+  --card-hover: #161a1e;
+  --border: #1e2228;
+  --border-hover: #2a3038;
+  --muted: #71717a;
+  --muted-foreground: #a1a1aa;
+  --accent: #6366f1;
+  --accent-muted: #4f46e5;
+  --accent-subtle: rgba(99, 102, 241, 0.08);
+  --success: #22c55e;
+  --caution: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-hover: var(--card-hover);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-muted: var(--accent-muted);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-success: var(--success);
+  --color-caution: var(--caution);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+/* Selection */
+::selection {
+  background: rgba(99, 102, 241, 0.3);
+  color: white;
+}
