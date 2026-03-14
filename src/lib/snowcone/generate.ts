@@ -83,12 +83,15 @@ ${format === 'x_thread' ? `Generate an X thread (5-8 tweets):
 - Last tweet: CTA
 Return as JSON: { "hook": "...", "body": "...", "cta": "...", "hashtags": ["..."], "slides": [{ "slideNumber": 1, "title": "Tweet 1", "body": "..." }, ...] }` : ''}
 
-${format === 'pricing_card' ? `Generate pricing card copy:
-- Headline: Product name + tier
-- Subheadline: One-line value prop specific to this tier
+${format === 'pricing_card' ? `Generate pricing card copy for ALL 3 TIERS on ONE card:
+- Format: 4:3 ratio (1600x1200px) with all 3 tiers side by side
+- Headline: Product name
 - Description: MUST be between 120-160 characters. No shorter. No longer. Count carefully.
-- Price: ${persona.pricePoint}
-- Feature list context: Why each feature matters (not just the feature name)
+- Starter: $197 one-time — entry level features
+- Pro: $397 one-time — "MOST POPULAR" badge — growth features
+- Agency: $997 one-time — white-label/multi-location features
+- Anti-competitor comparison line
+- Each tier needs: price, 5 features, CTA button text
 - CTA button text
 - Anti-competitor comparison line
 Return as JSON: { "hook": "...", "body": "...", "cta": "...", "hashtags": [], "pricingCard": { "headline": "...", "subheadline": "...", "price": "...", "featureContext": ["..."], "ctaButton": "...", "comparisonLine": "..." } }` : ''}

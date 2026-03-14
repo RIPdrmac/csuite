@@ -3,6 +3,7 @@
 // Positioning: Not a website — it's a webOS. Claude-connected intelligence.
 // Angle: You control your data. No StyleSeat taking 25%. No Acuity limitations.
 // RULE: Product descriptions must be 120-160 characters. No exceptions.
+// RULE: Pricing cards must show ALL 3 tiers on one image — 4:3 ratio (1600x1200px). Never separate tier images.
 
 export interface SnowconePersona {
   id: string;

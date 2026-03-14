@@ -60,12 +60,14 @@ export interface CarouselSlide {
 export interface PricingCardData {
   productName: string;
   niche: string;
-  tier: 'starter' | 'pro' | 'agency';
-  price: number;
-  features: string[];
-  cta: string;
-  badge?: string;
-  antiCompetitor?: string;
+  description: string; // 120-160 chars
+  format: '4:3'; // Always 1600x1200
+  tiers: {
+    starter: { price: number; features: string[]; cta: string };
+    pro: { price: number; features: string[]; cta: string; badge: 'MOST POPULAR' };
+    agency: { price: number; features: string[]; cta: string };
+  };
+  antiCompetitor: string;
 }
 
 export interface ContentSchedule {
