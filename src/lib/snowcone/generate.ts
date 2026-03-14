@@ -122,18 +122,33 @@ export async function generateContent(request: GenerateRequest): Promise<Generat
       const response = await client.messages.create({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 2048,
+        system: 'You are a content generation engine. You MUST respond with ONLY a valid JSON object. No markdown, no explanation, no code blocks, no backticks. Just raw JSON starting with { and ending with }.',
         messages: [{ role: 'user', content: prompt }],
       });
 
-      const text = response.content[0].type === 'text' ? response.content[0].text : '';
+      const rawText = response.content[0].type === 'text' ? response.content[0].text : '';
 
-      // Parse JSON from response (handle markdown code blocks)
-      let parsed;
+      // Clean and parse Claude's JSON response
+      let parsed: Record<string, any>;
       try {
-        const jsonStr = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-        parsed = JSON.parse(jsonStr);
+        // Strip markdown code blocks if present
+        let clean = rawText.replace(/^```(?:json)?\s*/m, '').replace(/\s*```\s*$/m, '').trim();
+        // Fix common Claude JSON issues: unquoted hashtags
+        clean = clean.replace(/,\s*#(?=[a-zA-Z])/g, ', "#').replace(/#([a-zA-Z]\w*)"?\]/g, '"#$1"]');
+        parsed = JSON.parse(clean);
       } catch {
-        parsed = { hook: text.slice(0, 100), body: text, cta: '', hashtags: [] };
+        // If JSON parsing fails, extract fields manually
+        const hookMatch = rawText.match(/"hook":\s*"([^"]+)"/);
+        const bodyMatch = rawText.match(/"body":\s*"([\s\S]*?)(?:"\s*,\s*"cta)/);
+        const ctaMatch = rawText.match(/"cta":\s*"([^"]+)"/);
+        const hashtagMatch = rawText.match(/"hashtags":\s*\[([\s\S]*?)\]/);
+
+        parsed = {
+          hook: hookMatch?.[1] || rawText.slice(0, 80),
+          body: bodyMatch?.[1]?.replace(/\\n/g, '\n') || rawText,
+          cta: ctaMatch?.[1] || '',
+          hashtags: hashtagMatch?.[1]?.match(/"([^"]+)"/g)?.map((h: string) => h.replace(/"/g, '')) || [],
+        };
       }
 
       const platform = format.startsWith('instagram') ? 'instagram'
