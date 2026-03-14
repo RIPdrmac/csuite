@@ -6,8 +6,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { KPIStatCard } from '@/components/csuite/kpi-stat-card';
 import { ConfidenceBadge } from '@/components/csuite/confidence-badge';
-import { agentRecommendations, agentLogs, todos } from '@/data/mock';
-import { AgentName } from '@/types';
+import { agentRecommendations, agentLogs as initialLogs, todos as initialTodos } from '@/data/mock';
+import { AgentName, AgentLog, TodoItem, TodoStatus } from '@/types';
 import { cn, formatPercent } from '@/lib/utils';
 import {
   Brain, CheckCircle2, XCircle, Clock, Activity,
@@ -49,6 +49,20 @@ const priorityVariant: Record<string, 'danger' | 'caution' | 'info' | 'default'>
 
 export default function AgentIntelPage() {
   const [selectedAgent, setSelectedAgent] = useState<AgentName | null>(null);
+  const [agentLogs, setAgentLogs] = useState<AgentLog[]>(initialLogs);
+  const [todos, setTodos] = useState<TodoItem[]>(initialTodos);
+
+  const acceptLog = (id: string) => {
+    setAgentLogs(prev => prev.map(l => l.id === id ? { ...l, accepted: true } : l));
+  };
+
+  const ignoreLog = (id: string) => {
+    setAgentLogs(prev => prev.map(l => l.id === id ? { ...l, accepted: false } : l));
+  };
+
+  const cycleTodoStatus = (id: string, newStatus: TodoStatus) => {
+    setTodos(prev => prev.map(t => t.id === id ? { ...t, status: newStatus } : t));
+  };
 
   const totalRecs = agentLogs.length;
   const acceptedRecs = agentLogs.filter(l => l.accepted === true).length;
@@ -161,6 +175,23 @@ export default function AgentIntelPage() {
                         )}
                       </div>
                     )}
+                    {/* Action buttons for pending */}
+                    {log.accepted === null && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <button
+                          onClick={() => acceptLog(log.id)}
+                          className="px-3 py-1.5 text-[11px] font-medium rounded-md bg-success/15 text-success hover:bg-success/25 transition-colors"
+                        >
+                          ✓ Accept
+                        </button>
+                        <button
+                          onClick={() => ignoreLog(log.id)}
+                          className="px-3 py-1.5 text-[11px] font-medium rounded-md bg-danger/15 text-danger hover:bg-danger/25 transition-colors"
+                        >
+                          ✗ Ignore
+                        </button>
+                      </div>
+                    )}
                     <div className="text-[10px] font-mono text-muted mt-1.5">{new Date(log.timestamp).toLocaleDateString()}</div>
                   </div>
                 ))}
@@ -204,12 +235,23 @@ export default function AgentIntelPage() {
                       const StatusIcon = statusIcons[todo.status];
                       return (
                         <div key={todo.id} className={cn('flex items-start gap-3 px-4 py-2.5 hover:bg-card-hover', i !== agentTasks.length - 1 && 'border-b border-border')}>
-                          <StatusIcon className={cn('w-3.5 h-3.5 mt-0.5 flex-shrink-0', statusColors[todo.status])} />
+                          <button onClick={() => cycleTodoStatus(todo.id, todo.status === 'todo' ? 'in-progress' : todo.status === 'in-progress' ? 'done' : 'todo')} className="mt-0.5 flex-shrink-0 hover:scale-125 transition-transform">
+                            <StatusIcon className={cn('w-3.5 h-3.5', statusColors[todo.status])} />
+                          </button>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
                               <span className={cn('text-[12px] font-medium', todo.status === 'done' ? 'text-muted line-through' : 'text-foreground')}>{todo.title}</span>
                               <Badge variant={priorityVariant[todo.priority]}>{todo.priority}</Badge>
+                              <span className={cn('text-[9px] font-mono px-1.5 py-0.5 rounded border', todo.permission === 'auto' ? 'bg-success/10 text-success border-success/20' : todo.permission === 'approve' ? 'bg-accent/10 text-accent border-accent/20' : 'bg-caution/10 text-caution border-caution/20')}>
+                                {todo.permission === 'auto' ? 'AUTO' : todo.permission === 'approve' ? 'APPROVE' : 'HUMAN'}
+                              </span>
                             </div>
+                            {todo.status !== 'done' && (
+                              <div className="flex items-center gap-1.5 mt-1">
+                                {todo.status === 'todo' && <button onClick={() => cycleTodoStatus(todo.id, 'in-progress')} className="px-2 py-0.5 text-[10px] rounded bg-accent/15 text-accent hover:bg-accent/25">Start →</button>}
+                                {todo.status === 'in-progress' && <button onClick={() => cycleTodoStatus(todo.id, 'done')} className="px-2 py-0.5 text-[10px] rounded bg-success/15 text-success hover:bg-success/25">Done ✓</button>}
+                              </div>
+                            )}
                           </div>
                           {todo.dueDate && <span className="text-[10px] font-mono text-muted flex-shrink-0">{todo.dueDate}</span>}
                         </div>
