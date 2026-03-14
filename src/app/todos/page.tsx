@@ -6,8 +6,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { KPIStatCard } from '@/components/csuite/kpi-stat-card';
-import { todos } from '@/data/mock';
-import { TodoPriority, TodoStatus, AgentName } from '@/types';
+import { todos as initialTodos } from '@/data/mock';
+import { TodoPriority, TodoStatus, TodoItem, AgentName } from '@/types';
 import { cn } from '@/lib/utils';
 import { Circle, CheckCircle2, Clock, AlertCircle, Plus } from 'lucide-react';
 
@@ -45,6 +45,20 @@ const agentColors: Record<AgentName, string> = {
 
 export default function TodosPage() {
   const [filter, setFilter] = useState<TodoStatus | 'All'>('All');
+  const [todos, setTodos] = useState<TodoItem[]>(initialTodos);
+
+  const cycleStatus = (id: string) => {
+    setTodos(prev => prev.map(t => {
+      if (t.id !== id) return t;
+      const next: Record<TodoStatus, TodoStatus> = {
+        'todo': 'in-progress',
+        'in-progress': 'done',
+        'done': 'todo',
+        'blocked': 'todo',
+      };
+      return { ...t, status: next[t.status] };
+    }));
+  };
 
   const filtered = todos.filter((t) => filter === 'All' || t.status === filter);
 
@@ -102,7 +116,9 @@ export default function TodosPage() {
                     i !== filtered.length - 1 && 'border-b border-border'
                   )}
                 >
-                  <StatusIcon className={cn('w-4 h-4 mt-0.5 flex-shrink-0', statusColors[todo.status])} />
+                  <button onClick={() => cycleStatus(todo.id)} className="mt-0.5 flex-shrink-0 hover:scale-125 transition-transform" title="Click to change status">
+                    <StatusIcon className={cn('w-4 h-4', statusColors[todo.status])} />
+                  </button>
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2 mb-0.5">
                       <h4 className={cn(
