@@ -105,6 +105,7 @@ export interface KPIStats {
 
 export type TodoPriority = 'critical' | 'high' | 'medium' | 'low';
 export type TodoStatus = 'todo' | 'in-progress' | 'done' | 'blocked';
+export type TodoPermission = 'human' | 'approve' | 'auto';
 
 export interface TodoItem {
   id: string;
@@ -112,6 +113,7 @@ export interface TodoItem {
   description?: string;
   priority: TodoPriority;
   status: TodoStatus;
+  permission: TodoPermission;
   agent?: AgentName;
   dueDate?: string;
   createdAt: string;

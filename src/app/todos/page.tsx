@@ -133,10 +133,55 @@ export default function TodosPage() {
                           {todo.agent}
                         </span>
                       )}
+                      {/* Permission level */}
+                      <span className={cn(
+                        'px-1.5 py-0.5 text-[9px] font-mono rounded border',
+                        todo.permission === 'auto' && 'bg-success/10 text-success border-success/20',
+                        todo.permission === 'approve' && 'bg-accent/10 text-accent border-accent/20',
+                        todo.permission === 'human' && 'bg-caution/10 text-caution border-caution/20',
+                      )}>
+                        {todo.permission === 'auto' ? 'AUTO' : todo.permission === 'approve' ? 'APPROVE' : 'HUMAN'}
+                      </span>
                     </div>
                     {todo.description && (
                       <p className="text-[12px] text-muted-foreground">{todo.description}</p>
                     )}
+                    {/* Action buttons + stage indicator */}
+                    <div className="flex items-center gap-2 mt-2">
+                      {todo.status === 'todo' && (
+                        <button
+                          onClick={() => setTodos(prev => prev.map(t => t.id === todo.id ? { ...t, status: 'in-progress' as TodoStatus } : t))}
+                          className="px-2.5 py-1 text-[11px] font-medium rounded-md bg-accent/15 text-accent hover:bg-accent/25 transition-colors"
+                        >
+                          Start →
+                        </button>
+                      )}
+                      {todo.status === 'in-progress' && (
+                        <button
+                          onClick={() => setTodos(prev => prev.map(t => t.id === todo.id ? { ...t, status: 'done' as TodoStatus } : t))}
+                          className="px-2.5 py-1 text-[11px] font-medium rounded-md bg-success/15 text-success hover:bg-success/25 transition-colors"
+                        >
+                          Done ✓
+                        </button>
+                      )}
+                      {todo.status === 'done' && (
+                        <button
+                          onClick={() => setTodos(prev => prev.map(t => t.id === todo.id ? { ...t, status: 'todo' as TodoStatus } : t))}
+                          className="px-2.5 py-1 text-[11px] font-medium rounded-md bg-card-hover text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          Reopen
+                        </button>
+                      )}
+                      {/* Stage indicator */}
+                      <div className="flex items-center gap-1 ml-auto">
+                        <div className={cn('w-5 h-1 rounded-full', todo.status === 'todo' ? 'bg-muted/40' : 'bg-accent')} />
+                        <div className={cn('w-5 h-1 rounded-full', todo.status === 'in-progress' ? 'bg-accent' : todo.status === 'done' ? 'bg-success' : 'bg-muted/20')} />
+                        <div className={cn('w-5 h-1 rounded-full', todo.status === 'done' ? 'bg-success' : 'bg-muted/20')} />
+                        <span className={cn('text-[10px] font-mono ml-1', statusColors[todo.status])}>
+                          {todo.status === 'todo' ? 'TODO' : todo.status === 'in-progress' ? 'IN PROGRESS' : todo.status === 'done' ? 'DONE' : 'BLOCKED'}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                   {todo.dueDate && (
                     <span className="text-[11px] font-mono text-muted flex-shrink-0">
